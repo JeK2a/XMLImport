@@ -7,6 +7,11 @@ use PDOException;
 
 class DB
 {
+    /**
+     * Подключение к базе
+     *
+     * @return PDO
+     */
     public static function getConnection()
     {
         $params = [
@@ -27,6 +32,10 @@ class DB
             $db->exec("set names utf8");
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
+        }
+
+        if (empty($db)) {
+            die('Не удалось подключиться к базе данных');
         }
 
         return $db;

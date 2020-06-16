@@ -24,7 +24,7 @@ class Products
         $this->limit = $_GET['limit'] ?? 50;
         $this->page  = $_GET['page']  ?? 1;
 
-        $content = file_get_contents('products.html');
+        $content = file_get_contents('template/products.html');
         $products = $this->getProducts($this->page, $this->limit);
         $content = str_replace('{products}', $this->showProducts($products), $content);
         $content = str_replace('{pagination}', $this->createLinks(15), $content);
@@ -32,6 +32,12 @@ class Products
         echo $content;
     }
 
+    /**
+     * Прорисовка таблицы с продуктами
+     *
+     * @param $products
+     * @return string
+     */
     public function showProducts($products)
     {
         $columns = [
@@ -95,6 +101,12 @@ class Products
         return $html;
     }
 
+    /**
+     * Прорисовка пагинации
+     *
+     * @param int $links
+     * @return string
+     */
     private function createLinks(int $links = 7)
     {
         $last = ceil($this->total / $this->limit);
@@ -139,6 +151,11 @@ class Products
         return $html;
     }
 
+    /**
+     * Получение списка городов
+     *
+     * @return array
+     */
     private function getCity()
     {
         $query = '
@@ -159,6 +176,13 @@ class Products
         return $city;
     }
 
+    /**
+     * Получение списка продуктов
+     *
+     * @param int $page
+     * @param int $limit
+     * @return array
+     */
     private function getProducts(int $page, int $limit)
     {
         $page--;
@@ -175,6 +199,11 @@ class Products
         return $products;
     }
 
+    /**
+     * Получение количества продуктов
+     *
+     * @return mixed
+     */
     private function getProductsCount()
     {
         $query = '

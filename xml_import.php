@@ -9,7 +9,6 @@ require_once __DIR__ . '/db.php';
 class XMLImport
 {
     private $db;
-    private $i = 0;
 
     public function __construct()
     {
@@ -44,18 +43,9 @@ class XMLImport
                     $this->updatePriceAndQuantity($offers, $city_code);
                 }
 
-                echo ++$this->i;
-
-                echo '<pre>';
-                echo __FILE__.' - '.__LINE__."\n";
-                print_r(memory_get_usage());
-
-                echo "\n";
-
                 unset($xml_products);
                 unset($file_products);
                 gc_collect_cycles();
-
 
                 print_r(memory_get_usage());
                 echo '</pre>';
@@ -63,6 +53,11 @@ class XMLImport
         }
     }
 
+    /**
+     * Добавление продуктов
+     *
+     * @param SimpleXMLElement $products
+     */
     private function addNewProducts(SimpleXMLElement &$products)
     {
         $query_start = '
@@ -111,6 +106,12 @@ class XMLImport
         }
     }
 
+    /**
+     * Обновление количества и цены продукта
+     *
+     * @param SimpleXMLElement $offers
+     * @param $city_code
+     */
     private function updatePriceAndQuantity(SimpleXMLElement &$offers, $city_code)
     {
         foreach ($offers as $offer) {
@@ -125,16 +126,15 @@ class XMLImport
                     `price_' . $city_code . '`    = ' . $price . ' 
                 WHERE `code` = ' . $code . ';';
 
-//            echo ' ' . ++$this->i . ' ';
             $this->db->query($query);
         }
     }
 }
 
-//while (true) {
+while (true) {
     echo "start\n";
     $XMLImport = new XMLImport();
     $XMLImport->index();
     echo "stop\n";
-//    sleep(60);
-//}
+    sleep(60);
+}
